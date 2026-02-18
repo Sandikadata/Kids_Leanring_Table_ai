@@ -40,7 +40,9 @@ if mode == "Practice":
             st.error(f"❌ Wrong. Correct answer is {correct}")
 
 
-# ------------------------
+
+
+   # ------------------------
 # EXAM MODE
 # ------------------------
 if mode == "Examination":
@@ -65,10 +67,9 @@ if mode == "Examination":
 
     total_questions = 5
 
-    # ---- Exam finished ----
+    # -------- Exam finished --------
     if st.session_state.q_no > total_questions:
 
-        st.balloons()
         st.success(
             f"Exam finished! Your score is {st.session_state.score} / {total_questions}"
         )
@@ -85,7 +86,37 @@ if mode == "Examination":
         st.write(f"Question {st.session_state.q_no} of {total_questions}")
         st.write(f"{table} × {st.session_state.a} = ?")
 
-        # Disable input after submit
+        # ✅ Answer input (always visible)
+        st.number_input(
+            "Write your answer",
+            step=1,
+            key="exam_answer",
+            disabled=st.session_state.submitted
+        )
 
+        # ✅ Submit button (visible before submit)
+        if not st.session_state.submitted:
 
-   
+            if st.button("Submit"):
+
+                correct = table * st.session_state.a
+
+                if st.session_state.exam_answer == correct:
+                    st.success("✅ Correct")
+                    st.session_state.score += 1
+                else:
+                    st.error(f"❌ Wrong. Correct answer is {correct}")
+
+                st.session_state.submitted = True
+
+        # ✅ Next Question button (only after submit)
+        else:
+
+            if st.button("Next Question"):
+                st.session_state.q_no += 1
+                st.session_state.a = random.randint(1, 10)
+                st.session_state.exam_answer = 0
+                st.session_state.submitted = False
+
+    
+
