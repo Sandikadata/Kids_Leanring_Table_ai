@@ -40,6 +40,7 @@ if mode == "Practice":
             st.error(f"❌ Wrong. Correct answer is {correct}")
 
 # ------------------------
+## ------------------------
 # EXAM MODE
 # ------------------------
 if mode == "Examination":
@@ -56,33 +57,69 @@ if mode == "Examination":
     if "a" not in st.session_state:
         st.session_state.a = random.randint(1, 10)
 
+    if "exam_answer" not in st.session_state:
+        st.session_state.exam_answer = 0
+
     total_questions = 5
 
-    st.write(f"Question {st.session_state.q_no} of {total_questions}")
+    # ---- finish exam ----
+    if st.session_state.q_no > total_questions:
 
-    st.write(f"{table} × {st.session_state.a} = ?")
+        st.balloons()
+        st.success(
+            f"Exam finished! Your score is {st.session_state.score} / {total_questions}"
+        )
 
-    exam_answer = st.number_input(
-        "Write your answer",
-        step=1,
-        key="exam_answer"
-    )
+        if st.button("Restart Exam"):
+            st.session_state.q_no = 1
+            st.session_state.score = 0
+            st.session_state.a = random.randint(1, 10)
+            st.session_state.exam_answer = 0
 
-    if st.button("Submit"):
+    else:
 
-        correct = table * st.session_state.a
+        st.write(f"Question {st.session_state.q_no} of {total_questions}")
+        st.write(f"{table} × {st.session_state.a} = ?")
 
-        if exam_answer == correct:
-            st.success("✅ Correct")
-            st.session_state.score += 1
-        else:
-            st.error(f"❌ Wrong. Correct answer is {correct}")
+        st.number_input(
+            "Write your answer",
+            step=1,
+            key="exam_answer"
+        )
+
+        if st.button("Submit"):
+
+            correct = table * st.session_state.a
+
+            if st.session_state.exam_answer == correct:
+                st.success("✅ Correct")
+                st.session_state.score += 1
+            else:
+                st.error(f"❌ Wrong. Correct answer is {correct}")
+
+            # next question
+            st.session_state.q_no += 1
+            st.session_state.a = random.randint(1, 10)
+            st.session_state.exam_answer = 0
 
         st.session_state.q_no += 1
         st.session_state.a = random.randint(1, 10)
 
         # clear input box
-        st.session_state.exam_answer = 0
+        # ----- Initialize session state safely -----
+
+        if "exam_answer" not in st.session_state:
+            st.session_state.exam_answer = ""
+
+        # ----- Answer input -----
+
+        st.text_input(
+            "Write your answer",
+            key="exam_answer"
+        )
+        if st.button("Next Question"):
+            st.session_state.exam_answer = ""
+            st.session_state.current_question += 1
 
         if st.session_state.q_no > total_questions:
             st.balloons()
