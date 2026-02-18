@@ -41,15 +41,14 @@ if mode == "Practice":
 
 
 
-
-   # ------------------------
+# ------------------------
 # EXAM MODE
 # ------------------------
 if mode == "Examination":
 
     st.subheader("Examination Mode")
 
-    # ---- session state ----
+    # -------- session state --------
     if "q_no" not in st.session_state:
         st.session_state.q_no = 1
 
@@ -67,7 +66,7 @@ if mode == "Examination":
 
     total_questions = 5
 
-    # -------- Exam finished --------
+    # -------- exam finished --------
     if st.session_state.q_no > total_questions:
 
         st.success(
@@ -78,7 +77,7 @@ if mode == "Examination":
             st.session_state.q_no = 1
             st.session_state.score = 0
             st.session_state.a = random.randint(1, 10)
-            st.session_state.exam_answer = 0
+            st.session_state.exam_input = 0
             st.session_state.submitted = False
 
     else:
@@ -86,22 +85,22 @@ if mode == "Examination":
         st.write(f"Question {st.session_state.q_no} of {total_questions}")
         st.write(f"{table} × {st.session_state.a} = ?")
 
-        # ✅ Answer input (always visible)
+        # ----- answer input (always visible) -----
         st.number_input(
             "Write your answer",
             step=1,
-            key="exam_answer",
-            disabled=st.session_state.submitted
+            key="exam_input"
         )
 
-        # ✅ Submit button (visible before submit)
-        if not st.session_state.submitted:
+        col1, col2 = st.columns(2)
 
+        # ----- Submit -----
+        with col1:
             if st.button("Submit"):
 
                 correct = table * st.session_state.a
 
-                if st.session_state.exam_answer == correct:
+                if st.session_state.exam_input == correct:
                     st.success("✅ Correct")
                     st.session_state.score += 1
                 else:
@@ -109,16 +108,21 @@ if mode == "Examination":
 
                 st.session_state.submitted = True
 
-        # ✅ Next Question button (only after submit)
-        else:
-
+        # ----- Next Question -----
+        with col2:
             if st.button("Next Question"):
-                st.session_state.q_no += 1
-                st.session_state.a = random.randint(1, 10)
-                st.session_state.exam_answer = 0
-                st.session_state.submitted = False
+
+                # move only if already submitted
+                if st.session_state.submitted:
+
+                    st.session_state.q_no += 1
+                    st.session_state.a = random.randint(1, 10)
+
+                    # reset answer for next question
+                    st.session_state.exam_input = 0
+                    st.session_state.submitted = False
+
+                else:
+                    st.warning("Please submit your answer first.")
 
     
-
-
-
