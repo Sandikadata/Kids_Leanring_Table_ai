@@ -1,1 +1,1 @@
-# Kids_Leanring_Table_ai
+# Kids_Learning_Table_ai
