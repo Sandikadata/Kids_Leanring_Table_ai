@@ -60,7 +60,7 @@ if mode == "Examination":
         st.session_state.a = random.randint(1, 10)
 
     if "exam_input" not in st.session_state:
-    st.session_state.exam_input = 0
+        st.session_state.exam_input = 0
 
     if "submitted" not in st.session_state:
         st.session_state.submitted = False
@@ -119,5 +119,6 @@ if mode == "Examination":
                 st.session_state.submitted = False
 
     
+
 
 
