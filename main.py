@@ -40,7 +40,6 @@ if mode == "Practice":
             st.error(f"❌ Wrong. Correct answer is {correct}")
 
 # ------------------------
-## ------------------------
 # EXAM MODE
 # ------------------------
 if mode == "Examination":
@@ -62,7 +61,7 @@ if mode == "Examination":
 
     total_questions = 5
 
-    # ---- finish exam ----
+    # ---- Exam finished ----
     if st.session_state.q_no > total_questions:
 
         st.balloons()
@@ -81,6 +80,7 @@ if mode == "Examination":
         st.write(f"Question {st.session_state.q_no} of {total_questions}")
         st.write(f"{table} × {st.session_state.a} = ?")
 
+        # ✅ only ONE widget with this key
         st.number_input(
             "Write your answer",
             step=1,
@@ -97,37 +97,7 @@ if mode == "Examination":
             else:
                 st.error(f"❌ Wrong. Correct answer is {correct}")
 
-            # next question
+            # move to next question
             st.session_state.q_no += 1
             st.session_state.a = random.randint(1, 10)
             st.session_state.exam_answer = 0
-
-        st.session_state.q_no += 1
-        st.session_state.a = random.randint(1, 10)
-
-        # clear input box
-        # ----- Initialize session state safely -----
-
-        if "exam_answer" not in st.session_state:
-            st.session_state.exam_answer = ""
-
-        # ----- Answer input -----
-
-        st.text_input(
-            "Write your answer",
-            key="exam_answer"
-        )
-        if st.button("Next Question"):
-            st.session_state.exam_answer = ""
-            st.session_state.current_question += 1
-
-        if st.session_state.q_no > total_questions:
-            st.balloons()
-            st.success(
-                f"Exam finished! Your score is {st.session_state.score} / {total_questions}"
-            )
-
-            if st.button("Restart Exam"):
-                st.session_state.q_no = 1
-                st.session_state.score = 0
-                st.session_state.a = random.randint(1, 10)
