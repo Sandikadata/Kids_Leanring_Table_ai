@@ -1,37 +1,96 @@
 import streamlit as st
-import langchainanstable
+import random
 
-st.title(" Multiplication Table Practice")
+st.set_page_config(page_title="Kids Math Tables App")
 
-number = st.sidebar.selectbox(
-    "Pick a number",
+st.title("🧮 Kids Multiplication Tables App")
+
+# ------------------------
+# Sidebar
+# ------------------------
+mode = st.sidebar.selectbox(
+    "Select Mode",
+    ["Practice", "Examination"]
+)
+
+table = st.sidebar.selectbox(
+    "Select Table",
     list(range(2, 21))
 )
 
-if number:
+# ------------------------
+# PRACTICE MODE
+# ------------------------
+if mode == "Practice":
 
-    if st.button("Generate Questions"):
-        response = langchainanstable.generate_multiplication_questions_with_answers(number)
+    st.subheader("Practice Mode")
 
-        st.session_state["questions"] = response["questions"]
-        st.session_state["answers"] = response["answers"]
+    a = st.number_input("Enter a number (1 to 10)", min_value=1, max_value=10, step=1)
 
-# -------------------------
-# Show questions
-# -------------------------
-if "questions" in st.session_state:
+    st.write(f"Question:  {table} × {a} = ?")
 
-    st.subheader("Questions")
+    answer = st.number_input("Write your answer", step=1, key="practice_answer")
 
-    for q in st.session_state["questions"]:
-        st.write(q)
+    if st.button("Check Answer"):
+        correct = table * a
 
-    # -------------------------
-    # Show answers button
-    # -------------------------
-    if st.button("Show Answers"):
+        if answer == correct:
+            st.success("✅ Correct!")
+        else:
+            st.error(f"❌ Wrong. Correct answer is {correct}")
 
-        st.subheader("Answers")
+# ------------------------
+# EXAM MODE
+# ------------------------
+if mode == "Examination":
 
-        for ans in st.session_state["answers"]:
-            st.write(ans)
+    st.subheader("Examination Mode")
+
+    # ---- session state ----
+    if "q_no" not in st.session_state:
+        st.session_state.q_no = 1
+
+    if "score" not in st.session_state:
+        st.session_state.score = 0
+
+    if "a" not in st.session_state:
+        st.session_state.a = random.randint(1, 10)
+
+    total_questions = 5
+
+    st.write(f"Question {st.session_state.q_no} of {total_questions}")
+
+    st.write(f"{table} × {st.session_state.a} = ?")
+
+    exam_answer = st.number_input(
+        "Write your answer",
+        step=1,
+        key="exam_answer"
+    )
+
+    if st.button("Submit"):
+
+        correct = table * st.session_state.a
+
+        if exam_answer == correct:
+            st.success("✅ Correct")
+            st.session_state.score += 1
+        else:
+            st.error(f"❌ Wrong. Correct answer is {correct}")
+
+        st.session_state.q_no += 1
+        st.session_state.a = random.randint(1, 10)
+
+        # clear input box
+        st.session_state.exam_answer = 0
+
+        if st.session_state.q_no > total_questions:
+            st.balloons()
+            st.success(
+                f"Exam finished! Your score is {st.session_state.score} / {total_questions}"
+            )
+
+            if st.button("Restart Exam"):
+                st.session_state.q_no = 1
+                st.session_state.score = 0
+                st.session_state.a = random.randint(1, 10)
