@@ -39,6 +39,7 @@ if mode == "Practice":
         else:
             st.error(f"❌ Wrong. Correct answer is {correct}")
 
+
 # ------------------------
 # EXAM MODE
 # ------------------------
@@ -59,6 +60,9 @@ if mode == "Examination":
     if "exam_answer" not in st.session_state:
         st.session_state.exam_answer = 0
 
+    if "submitted" not in st.session_state:
+        st.session_state.submitted = False
+
     total_questions = 5
 
     # ---- Exam finished ----
@@ -74,30 +78,14 @@ if mode == "Examination":
             st.session_state.score = 0
             st.session_state.a = random.randint(1, 10)
             st.session_state.exam_answer = 0
+            st.session_state.submitted = False
 
     else:
 
         st.write(f"Question {st.session_state.q_no} of {total_questions}")
         st.write(f"{table} × {st.session_state.a} = ?")
 
-        # ✅ only ONE widget with this key
-        st.number_input(
-            "Write your answer",
-            step=1,
-            key="exam_answer"
-        )
+        # Disable input after submit
 
-        if st.button("Submit"):
 
-            correct = table * st.session_state.a
-
-            if st.session_state.exam_answer == correct:
-                st.success("✅ Correct")
-                st.session_state.score += 1
-            else:
-                st.error(f"❌ Wrong. Correct answer is {correct}")
-
-            # move to next question
-            st.session_state.q_no += 1
-            st.session_state.a = random.randint(1, 10)
-            st.session_state.exam_answer = 0
+   
