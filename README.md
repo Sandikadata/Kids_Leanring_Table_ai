@@ -1,4 +1,4 @@
-# Kids_Learning_Table_ai
+# BASIC SARAL MATHS
 # 📘 Kids Mathematics Practice App (Multiplication Tables)
 
 This is a simple AI-powered learning application built using **Python**, **Streamlit** and **Gemini (LangChain integration)**.
