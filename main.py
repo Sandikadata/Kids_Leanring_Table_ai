@@ -1,42 +1,63 @@
 import streamlit as st
-import random
 
-st.set_page_config(page_title="Kids Math Tables App")
+st.set_page_config(page_title="Basic SARAL Math")
 
-st.title("🧮 Kids Multiplication Tables App")
-
+st.title("🧮 Kids Basic Maths App")
+number = st.number_input("Enter the number", min_value=1, step=1)
 # ------------------------
 # Sidebar
-# ------------------------
-mode = st.sidebar.selectbox(
+# ----------------------#
+Mode = st.sidebar.selectbox(
     "Select Mode",
-    ["Practice"]
+    ["Addition", "Subtraction", "Multiplication", "Division"]
 )
+st.write("Selected mode =", Mode)
 
-table = st.sidebar.selectbox(
-    "Select Table",
-    list(range(2, 21))
-)
+start=1
+end=10
 
-# ------------------------
-# PRACTICE MODE
-# ------------------------
-if mode == "Practice":
+for i in range(start, end + 1):
 
-    st.subheader("Practice Mode")
+    # default operands
+    left = number
+    right = i
 
-    a = st.number_input("Enter a number (1 to 10)", min_value=1, max_value=10, step=1)
+    if Mode == "Multiplication":
+        correct = left * right
+        symbol = "×"
 
-    st.write(f"Question:  {table} × {a} = ?")
+    elif Mode == "Addition":
+        correct = left + right
+        symbol = "+"
 
-    answer = st.number_input("Write your answer", step=1, key="practice_answer")
+    elif Mode == "Subtraction":
+        # always bigger minus smaller
+        left = max(number, i)
+        right = min(number, i)
+        correct = left - right
+        symbol = "-"
 
-    if st.button("Check Answer"):
-        correct = table * a
+    elif Mode == "Division":
+        # do not show when divisor is greater than numerator
+        if i > number:
+            continue
+        correct = round(number / i, 2)
+        symbol = "÷"
 
-        if answer == correct:
-            st.success("✅ Correct!")
-        else:
-            st.error(f"❌ Wrong. Correct answer is {correct}")
+    user_ans = st.text_input(
+        f"{left} {symbol} {right} = ?",
+        key=f"{Mode}_{i}"
+    )
+
+    if st.button("Check", key=f"check_{Mode}_{i}"):
+
+        try:
+            if abs(float(user_ans) - float(correct)) < 0.01:
+                st.success("Correct ✅")
+            else:
+                st.error(f"Wrong ❌  Correct answer is {correct}")
+        except:
+            st.warning("Please enter a valid number")
+
 
 
