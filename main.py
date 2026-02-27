@@ -1,6 +1,6 @@
 import streamlit as st
 
-st.set_page_config(page_title="Basic SARAL Math")
+st.set_page_config(page_title="Basic SARAL Maths")
 
 st.title("🧮 Kids Basic Maths App")
 number = st.number_input("Enter the number", min_value=1, step=1)
@@ -58,6 +58,7 @@ for i in range(start, end + 1):
                 st.error(f"Wrong ❌  Correct answer is {correct}")
         except:
             st.warning("Please enter a valid number")
+
 
 
 
